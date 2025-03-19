@@ -8,7 +8,7 @@ import {
   ThemedTitleV2,
   ThemedSiderV2,
 } from "@refinedev/antd";
-import dataProvider, { axiosInstance } from "@refinedev/nestjsx-crud";
+import dataProvider from "@refinedev/nestjsx-crud";
 import { NavigateToResource, CatchAllNavigate } from "@refinedev/react-router";
 import { BrowserRouter, Routes, Route, Outlet } from "react-router";
 import { TeamOutlined } from "@ant-design/icons";
@@ -23,6 +23,7 @@ import AppLogo from "./components/AppLogo";
 import { Header } from "./components";
 import { PostCreate, PostEdit, PostList, PostShow } from "./pages/users";
 import { API_URL } from "./constants";
+import { axiosInstance } from "./utility/axios";
 
 const App: React.FC = () => {
   return (
