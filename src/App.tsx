@@ -1,90 +1,114 @@
-import { GitHubBanner, Refine } from "@refinedev/core";
+import { Authenticated, Refine } from "@refinedev/core";
+import { RefineKbarProvider } from "@refinedev/kbar";
+
 import {
-  useNotificationProvider,
   ThemedLayoutV2,
   ErrorComponent,
-  RefineThemes,
+  notificationProvider,
+  ThemedTitleV2,
+  ThemedSiderV2,
 } from "@refinedev/antd";
-import dataProvider from "@refinedev/nestjsx-crud";
-import routerProvider, {
-  NavigateToResource,
-  UnsavedChangesNotifier,
-  DocumentTitleHandler,
-} from "@refinedev/react-router";
+import dataProvider, { axiosInstance } from "@refinedev/nestjsx-crud";
+import { NavigateToResource, CatchAllNavigate } from "@refinedev/react-router";
 import { BrowserRouter, Routes, Route, Outlet } from "react-router";
-
-import { ConfigProvider, App as AntdApp } from "antd";
+import { TeamOutlined } from "@ant-design/icons";
+import { ConfigProvider } from "antd";
 import "@refinedev/antd/dist/reset.css";
-
-import { PostList, PostCreate, PostEdit, PostShow } from "./pages/posts";
-import { CategoryList, CategoryCreate, CategoryEdit } from "./pages/categories";
-
-const API_URL = "https://api.nestjsx-crud.refine.dev";
+import { Login } from "./pages/login";
+import { ColorModeContextProvider } from "./contexts/color-mode";
+import { API_URL, authProvider } from "./providers/authProvider";
+import { accessControlProvider } from "./providers/accessControlProvider";
+import routerBindings from "@refinedev/react-router";
+import AppLogo from "./components/AppLogo";
+import { Header } from "./components";
+import { PostCreate, PostEdit, PostList, PostShow } from "./pages/users";
 
 const App: React.FC = () => {
   return (
-    <BrowserRouter>
-      <GitHubBanner />
-      <ConfigProvider theme={RefineThemes.Blue}>
-        <AntdApp>
-          <Refine
-            dataProvider={dataProvider(API_URL)}
-            routerProvider={routerProvider}
-            resources={[
-              {
-                name: "posts",
-                list: "/posts",
-                create: "/posts/create",
-                edit: "/posts/edit/:id",
-                show: "/posts/show/:id",
-              },
-              {
-                name: "categories",
-                list: "/categories",
-                create: "/categories/create",
-                edit: "/categories/edit/:id",
-              },
-            ]}
-            notificationProvider={useNotificationProvider}
-            options={{
-              syncWithLocation: true,
-              warnWhenUnsavedChanges: true,
-            }}
-          >
-            <Routes>
-              <Route
-                element={
-                  <ThemedLayoutV2>
-                    <Outlet />
-                  </ThemedLayoutV2>
-                }
-              >
+    <ConfigProvider locale={{ locale: "vi" }}>
+      <BrowserRouter>
+        <RefineKbarProvider>
+          <ColorModeContextProvider>
+            <Refine
+              dataProvider={dataProvider(API_URL, axiosInstance)}
+              routerProvider={routerBindings}
+              authProvider={authProvider}
+              accessControlProvider={accessControlProvider}
+              notificationProvider={notificationProvider}
+              options={{
+                disableTelemetry: true,
+                syncWithLocation: true,
+                warnWhenUnsavedChanges: true,
+              }}
+              resources={[
+                {
+                  name: "users",
+                  list: "/users",
+                  create: "/users/create",
+                  edit: "/users/edit/:id",
+                  show: "/users/:id",
+                  meta: {
+                    canDelete: true,
+                    icon: (
+                      <TeamOutlined
+                        style={{ fontSize: "16px", color: "#08c" }}
+                      />
+                    ),
+                  },
+                },
+              ]}
+            >
+              <Routes>
                 <Route
-                  index
-                  element={<NavigateToResource resource="posts" />}
-                />
-                <Route path="/posts">
+                  element={
+                    <Authenticated
+                      key="autheticated-inner"
+                      fallback={<CatchAllNavigate to="/login" />}
+                    >
+                      <ThemedLayoutV2
+                        Title={({ collapsed }) => (
+                          <ThemedTitleV2
+                            // collapsed is a boolean value that indicates whether the <Sidebar> is collapsed or not
+                            collapsed={collapsed}
+                            // Adjust to different logo when collapsed, if needed
+                            icon={collapsed ? <AppLogo /> : <AppLogo />}
+                            text="Pile School" // App title if needed
+                          />
+                        )}
+                        Header={() => <Header sticky />}
+                        Sider={(props) => <ThemedSiderV2 {...props} fixed />}
+                      >
+                        <Outlet />
+                      </ThemedLayoutV2>
+                    </Authenticated>
+                  }
+                >
+                  <Route path="*" element={<ErrorComponent />} />
+                </Route>
+                <Route path="/users">
                   <Route index element={<PostList />} />
                   <Route path="create" element={<PostCreate />} />
                   <Route path="edit/:id" element={<PostEdit />} />
                   <Route path="show/:id" element={<PostShow />} />
                 </Route>
-
-                <Route path="/categories">
-                  <Route index element={<CategoryList />} />
-                  <Route path="create" element={<CategoryCreate />} />
-                  <Route path="edit/:id" element={<CategoryEdit />} />
+                <Route
+                  element={
+                    <Authenticated
+                      key="authenticated-outer"
+                      fallback={<Outlet />}
+                    >
+                      <NavigateToResource />
+                    </Authenticated>
+                  }
+                >
+                  <Route path="/login" element={<Login />} />
                 </Route>
-
-                <Route path="*" element={<ErrorComponent />} />
-              </Route>
-            </Routes>
-            <UnsavedChangesNotifier />
-            <DocumentTitleHandler />
-          </Refine>
-        </AntdApp>
-      </ConfigProvider>
-    </BrowserRouter>
+              </Routes>
+            </Refine>
+          </ColorModeContextProvider>
+        </RefineKbarProvider>
+      </BrowserRouter>
+    </ConfigProvider>
   );
 };
 
