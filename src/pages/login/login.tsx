@@ -8,9 +8,7 @@ import {
 } from "@refinedev/core";
 import { ThemedTitle } from "@refinedev/antd";
 import {
-  bodyStyles,
   containerStyles,
-  headStyles,
   layoutStyles,
   titleStyles,
 } from "../../components/styles/authStyles";
@@ -85,7 +83,7 @@ export const LoginPage: React.FC<LoginProps> = ({
         ...titleStyles,
       }}
     >
-      Admin site
+      Login Bee farm
     </Title>
   );
 
@@ -135,8 +133,6 @@ export const LoginPage: React.FC<LoginProps> = ({
   const CardContent = (
     <Card
       title={CardTitle}
-      headStyle={headStyles}
-      bodyStyle={bodyStyles}
       style={{
         ...containerStyles,
         backgroundColor: token.colorBgElevated,

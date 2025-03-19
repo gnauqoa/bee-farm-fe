@@ -16,12 +16,13 @@ import { ConfigProvider } from "antd";
 import "@refinedev/antd/dist/reset.css";
 import { Login } from "./pages/login";
 import { ColorModeContextProvider } from "./contexts/color-mode";
-import { API_URL, authProvider } from "./providers/authProvider";
+import { authProvider } from "./providers/authProvider";
 import { accessControlProvider } from "./providers/accessControlProvider";
 import routerBindings from "@refinedev/react-router";
 import AppLogo from "./components/AppLogo";
 import { Header } from "./components";
 import { PostCreate, PostEdit, PostList, PostShow } from "./pages/users";
+import { API_URL } from "./constants";
 
 const App: React.FC = () => {
   return (

@@ -1,23 +1,64 @@
-import { AuthActionResponse, AuthProvider, CheckResponse } from "@refinedev/core";
+import {
+  AuthActionResponse,
+  AuthProvider,
+  CheckResponse,
+} from "@refinedev/core";
 import { axiosInstance } from "@refinedev/nestjsx-crud";
-
-export const API_URL = "http://localhost:3000/api/v1";
+import {} from "constants";
+import {
+  REFRESH_TOKEN_KEY,
+  TOKEN_KEY,
+  TOKEN_EXPIRES_AT_KEY,
+  API_URL,
+} from "../constants";
+import { extractRoleInfoFromToken } from "../utility/user";
 
 export const authProvider: AuthProvider = {
-  login: async (): Promise<AuthActionResponse> => {
-    // ...
-    // We're setting the Authorization header when the user logs in.
-    axiosInstance.defaults.headers.common[
-      "Authorization"
-    ] = `Bearer ${localStorage.getItem("token")}`;
-    return {
-      success: true,
-      redirectTo: "/",
-    };
+  login: async ({ email, password }) => {
+    try {
+      const response = await axiosInstance.post(`${API_URL}/auth/email/login`, {
+        email,
+        password,
+      });
+
+      const data = response.data;
+
+      if (data.token) {
+        localStorage.setItem(TOKEN_KEY, data.token);
+        localStorage.setItem(REFRESH_TOKEN_KEY, data.refreshToken);
+        localStorage.setItem(TOKEN_EXPIRES_AT_KEY, data.tokenExpires);
+
+        const userRoleId = extractRoleInfoFromToken(data.token);
+        const resourcePathToRedirect =
+          userRoleId?.id === 1 ? "/users" : "/users";
+
+        return {
+          success: true,
+          redirectTo: resourcePathToRedirect,
+        };
+      } else {
+        return {
+          success: false,
+          error: {
+            name: "LoginError",
+            message: "Invalid username or password",
+          },
+        };
+      }
+    } catch (error) {
+      console.error("Error occurred during login:", error);
+      return {
+        success: false,
+        error: {
+          name: "LoginError",
+          message: "An error occurred during login.",
+        },
+      };
+    }
   },
   logout: async (): Promise<AuthActionResponse> => {
     // ...
-    // We're removing the Authorization header when the user logs out.
+    localStorage.removeItem(TOKEN_KEY);
     axiosInstance.defaults.headers.common["Authorization"] = undefined;
     return {
       success: true,
@@ -27,7 +68,7 @@ export const authProvider: AuthProvider = {
   check: async (): Promise<CheckResponse> => {
     // Implement your check logic here
     return {
-      authenticated: !!localStorage.getItem("token"),
+      authenticated: !!localStorage.getItem(TOKEN_KEY),
     };
   },
   onError: async (error: any): Promise<AuthActionResponse> => {
