@@ -21,7 +21,7 @@ import { accessControlProvider } from "./providers/accessControlProvider";
 import routerBindings from "@refinedev/react-router";
 import AppLogo from "./components/AppLogo";
 import { Header } from "./components";
-import { PostCreate, PostEdit, PostList, PostShow } from "./pages/users";
+import { UserCreate, UserEdit, UserList, UserShow } from "./pages/users";
 import { API_URL } from "./constants";
 import { axiosInstance } from "./utility/axios";
 
@@ -70,11 +70,9 @@ const App: React.FC = () => {
                       <ThemedLayoutV2
                         Title={({ collapsed }) => (
                           <ThemedTitleV2
-                            // collapsed is a boolean value that indicates whether the <Sidebar> is collapsed or not
                             collapsed={collapsed}
-                            // Adjust to different logo when collapsed, if needed
                             icon={collapsed ? <AppLogo /> : <AppLogo />}
-                            text="Bee farm" // App title if needed
+                            text="Bee farm"
                           />
                         )}
                         Header={() => <Header sticky />}
@@ -85,13 +83,13 @@ const App: React.FC = () => {
                     </Authenticated>
                   }
                 >
+                  <Route path="/users">
+                    <Route index element={<UserList />} />
+                    <Route path="create" element={<UserCreate />} />
+                    <Route path="edit/:id" element={<UserEdit />} />
+                    <Route path="show/:id" element={<UserShow />} />
+                  </Route>
                   <Route path="*" element={<ErrorComponent />} />
-                </Route>
-                <Route path="/users">
-                  <Route index element={<PostList />} />
-                  <Route path="create" element={<PostCreate />} />
-                  <Route path="edit/:id" element={<PostEdit />} />
-                  <Route path="show/:id" element={<PostShow />} />
                 </Route>
                 <Route
                   element={

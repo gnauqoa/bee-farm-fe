@@ -8,7 +8,7 @@ import type { IPost, ICategory } from "../../interfaces";
 
 const { Title, Text } = Typography;
 
-export const PostShow = () => {
+export const UserShow = () => {
   const { query: queryResult } = useShow<IPost>();
   const { data, isLoading } = queryResult;
   const record = data?.data;

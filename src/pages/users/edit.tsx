@@ -10,7 +10,7 @@ import MDEditor from "@uiw/react-md-editor";
 import type { IPost, ICategory, ITags } from "../../interfaces";
 import { normalizeFile } from "../../utility/normalize";
 
-export const PostEdit = () => {
+export const UserEdit = () => {
   const { formProps, saveButtonProps, query: queryResult } = useForm<IPost>();
   const apiUrl = useApiUrl();
 
