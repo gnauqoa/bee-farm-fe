@@ -4,7 +4,7 @@ import { Form, Input } from "antd";
 
 import type { ICategory } from "../../interfaces";
 
-export const CategoryCreate = () => {
+export const DeviceCreate = () => {
   const { formProps, saveButtonProps } = useForm<ICategory>();
 
   return (

@@ -24,6 +24,8 @@ import { Header } from "./components";
 import { UserEdit, UserList, UserShow } from "./pages/users";
 import { API_URL } from "./constants";
 import { axiosInstance } from "./utility/axios";
+import { DeviceEdit, DeviceList } from "./pages/devices";
+import { websocketProvider } from "./providers/liveProvider";
 
 const App: React.FC = () => {
   return (
@@ -32,6 +34,7 @@ const App: React.FC = () => {
         <RefineKbarProvider>
           <ColorModeContextProvider>
             <Refine
+              liveProvider={websocketProvider}
               dataProvider={dataProvider(API_URL, axiosInstance)}
               routerProvider={routerBindings}
               authProvider={authProvider}
@@ -43,6 +46,7 @@ const App: React.FC = () => {
                 warnWhenUnsavedChanges: true,
               }}
               resources={[
+                { name: "devices", list: "/devices" },
                 {
                   name: "users",
                   list: "/users",
@@ -83,6 +87,10 @@ const App: React.FC = () => {
                     </Authenticated>
                   }
                 >
+                  <Route path="/devices">
+                    <Route index element={<DeviceList />} />
+                    <Route path="edit/:id" element={<DeviceEdit />} />
+                  </Route>
                   <Route path="/users">
                     <Route index element={<UserList />} />
                     <Route path="edit/:id" element={<UserEdit />} />

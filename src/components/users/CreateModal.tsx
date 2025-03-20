@@ -5,7 +5,7 @@ import { IUser, UserRole, UserStatus } from "../../interfaces/user";
 
 export const UserCreateModal = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { formProps, saveButtonProps, onFinish } = useForm<IUser>({
+  const { form, formProps, saveButtonProps, onFinish } = useForm<IUser>({
     onMutationSuccess: () => setIsModalOpen(false),
   });
 
@@ -52,6 +52,7 @@ export const UserCreateModal = () => {
       >
         <Form
           {...formProps}
+          form={form}
           layout="vertical"
           initialValues={{
             fullName: "",

@@ -18,9 +18,15 @@ import {
   Select,
 } from "antd";
 import { IUser, UserStatus, UserRole } from "../../interfaces/user";
-import { CrudFilters, HttpError, LogicalFilter } from "@refinedev/core";
+import {
+  CrudFilters,
+  HttpError,
+  LogicalFilter,
+  useSubscription,
+} from "@refinedev/core";
 import dayjs from "dayjs";
 import { UserCreateModal } from "../../components/users/CreateModal";
+import { useEffect } from "react";
 
 const { RangePicker } = DatePicker;
 const roleColors: Record<UserRole, string> = {
@@ -87,6 +93,14 @@ export const UserList = () => {
       return filters;
     },
     defaultSetFilterBehavior: "replace",
+  });
+  useSubscription({
+    channel: "messages",
+    onLiveEvent: (event) => {
+      console.log({
+        message: `Tin nhắn mới: ${event.payload.text}`,
+      });
+    },
   });
 
   // Chuyển filters thành initialValues
