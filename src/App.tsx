@@ -21,7 +21,7 @@ import { accessControlProvider } from "./providers/accessControlProvider";
 import routerBindings from "@refinedev/react-router";
 import AppLogo from "./components/AppLogo";
 import { Header } from "./components";
-import { UserCreate, UserEdit, UserList, UserShow } from "./pages/users";
+import { UserEdit, UserList, UserShow } from "./pages/users";
 import { API_URL } from "./constants";
 import { axiosInstance } from "./utility/axios";
 
@@ -85,7 +85,6 @@ const App: React.FC = () => {
                 >
                   <Route path="/users">
                     <Route index element={<UserList />} />
-                    <Route path="create" element={<UserCreate />} />
                     <Route path="edit/:id" element={<UserEdit />} />
                     <Route path="show/:id" element={<UserShow />} />
                   </Route>

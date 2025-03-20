@@ -7,7 +7,6 @@ import {
   getDefaultSortOrder,
 } from "@refinedev/antd";
 import { SearchOutlined } from "@ant-design/icons";
-import { Dayjs } from "dayjs";
 import {
   Table,
   Space,
@@ -21,6 +20,7 @@ import {
 import { IUser, UserStatus, UserRole } from "../../interfaces/user";
 import { CrudFilters, HttpError, LogicalFilter } from "@refinedev/core";
 import dayjs from "dayjs";
+import { UserCreateModal } from "../../components/users/CreateModal";
 
 const { RangePicker } = DatePicker;
 const roleColors: Record<UserRole, string> = {
@@ -116,12 +116,17 @@ export const UserList = () => {
   };
 
   const handleClearFilters = () => {
-    searchFormProps.form?.resetFields();
+    searchFormProps.form?.setFieldsValue({
+      fullName: undefined,
+      role: undefined,
+      status: undefined,
+      createdAt: undefined,
+    });
     searchFormProps.form?.submit();
   };
 
   return (
-    <List>
+    <List headerButtons={<UserCreateModal />}>
       <Form
         layout="inline"
         {...searchFormProps}
