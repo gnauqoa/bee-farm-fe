@@ -11,7 +11,7 @@ import { HttpError } from "@refinedev/core";
 export { axiosInstance };
 
 const refreshAxios = axios.create();
-
+axiosInstance.defaults.baseURL = API_URL;
 axiosInstance.interceptors.request.use(
   async (request: InternalAxiosRequestConfig) => {
     const tokenExpiresAt = parseInt(
@@ -19,7 +19,6 @@ axiosInstance.interceptors.request.use(
       10
     );
     const currentTime = Date.now();
-    console.log({ cal: tokenExpiresAt - currentTime, TIME_THRESHOLD });
     if (tokenExpiresAt - currentTime <= TIME_THRESHOLD) {
       localStorage.removeItem(TOKEN_KEY);
       // handleLogout();
@@ -46,8 +45,6 @@ axiosInstance.interceptors.request.use(
     }
 
     const token = localStorage.getItem(TOKEN_KEY);
-
-    console.log("get token: ", token);
 
     if (request.headers) {
       request.headers["Authorization"] = `Bearer ${token}`;

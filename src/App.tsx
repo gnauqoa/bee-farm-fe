@@ -74,7 +74,7 @@ const App: React.FC = () => {
                             collapsed={collapsed}
                             // Adjust to different logo when collapsed, if needed
                             icon={collapsed ? <AppLogo /> : <AppLogo />}
-                            text="Pile School" // App title if needed
+                            text="Bee farm" // App title if needed
                           />
                         )}
                         Header={() => <Header sticky />}

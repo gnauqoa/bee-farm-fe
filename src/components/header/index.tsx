@@ -52,7 +52,6 @@ export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = ({
               {user.firstName} {user.lastName}
             </Text>
           )}
-          {/* {user?. && <Avatar src={user?.avatar} alt={user?.name} />} */}
         </Space>
       </Space>
     </AntdLayout.Header>
