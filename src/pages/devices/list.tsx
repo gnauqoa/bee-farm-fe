@@ -1,86 +1,142 @@
 import { useTable } from "@refinedev/antd";
-import { Table, Space, Tag, Input, Select } from "antd";
-import { useState } from "react";
+import { Table, Tag, Input, Select, Button, Form } from "antd";
+import { SearchOutlined } from "@ant-design/icons";
+import { useEffect, useState, useMemo } from "react";
 import { IDevice } from "../../interfaces/device";
+import { socket } from "../../providers/liveProvider";
+import { CrudFilters } from "@refinedev/core";
+import { DeviceStatus } from "../../interfaces/device";
+
+const statusColors: Record<DeviceStatus, string> = {
+  [DeviceStatus.Online]: "green",
+  [DeviceStatus.Offline]: "red",
+};
 
 export const DeviceList = () => {
-  const { tableProps, searchFormProps } = useTable<IDevice>({
+  const { tableProps, searchFormProps, tableQuery } = useTable<IDevice>({
     resource: "devices",
-    initialSorter: [
-      {
-        field: "createdAt",
-        order: "desc",
-      },
-    ],
     syncWithLocation: true,
+    onSearch: (params) => {
+      const filters: CrudFilters = [];
+      const { name, status } = params as any;
+
+      if (name) {
+        filters.push({
+          field: "name",
+          operator: "contains",
+          value: name,
+        });
+      }
+
+      if (status) {
+        filters.push({
+          field: "status",
+          operator: "eq",
+          value: status,
+        });
+      }
+
+      return filters;
+    },
+    defaultSetFilterBehavior: "replace",
   });
 
-  const [searchText, setSearchText] = useState("");
-  const [statusFilter, setStatusFilter] = useState<string | null>(null);
+  const [devices, setDevices] = useState<IDevice[]>([]);
 
-  // Lọc dữ liệu dựa trên tìm kiếm & trạng thái
-  const filteredData = tableProps.dataSource?.filter((device) => {
-    const matchesSearch = device.name
-      .toLowerCase()
-      .includes(searchText.toLowerCase());
-    const matchesStatus = statusFilter ? device.status === statusFilter : true;
-    return matchesSearch && matchesStatus;
-  });
+  const handleDeviceUpdate = (updatedDevice: IDevice) => {
+    setDevices((prevDevices) =>
+      prevDevices.map((d) => (d.id === updatedDevice.id ? updatedDevice : d))
+    );
+  };
+
+  useEffect(() => {
+    if (!tableQuery.data?.data) return;
+
+    const newDevices = tableQuery.data.data;
+    setDevices(newDevices);
+
+    newDevices.forEach((device: IDevice) => {
+      console.log("Subscribing -", `device:${device.id}`);
+      socket.on(`device:${device.id}`, handleDeviceUpdate);
+    });
+
+    return () => {
+      newDevices.forEach((device: IDevice) => {
+        socket.off(`device:${device.id}`, handleDeviceUpdate);
+      });
+    };
+  }, [tableQuery.data?.data]);
 
   return (
     <>
-      {/* Thanh tìm kiếm & bộ lọc */}
-      <Space style={{ marginBottom: 16 }}>
-        <Input
-          placeholder="Search by name..."
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
-          allowClear
-        />
-        <Select
-          placeholder="Filter by status"
-          value={statusFilter}
-          onChange={(value) => setStatusFilter(value)}
-          allowClear
-          style={{ width: 150 }}
-        >
-          <Select.Option value="online">Online</Select.Option>
-          <Select.Option value="offline">Offline</Select.Option>
-        </Select>
-      </Space>
+      <Form
+        layout="inline"
+        {...searchFormProps}
+        style={{ marginBottom: 16, gap: 12 }}
+      >
+        <Form.Item name="name">
+          <Input
+            placeholder="Search by name..."
+            prefix={<SearchOutlined />}
+            allowClear
+          />
+        </Form.Item>
 
-      <Table {...tableProps} dataSource={filteredData} rowKey="id">
+        <Form.Item name="status">
+          <Select
+            placeholder="Filter by status"
+            allowClear
+            style={{ width: 150 }}
+            options={Object.values(DeviceStatus).map((status) => ({
+              label: (
+                <Tag color={statusColors[status]} style={{ margin: 0 }}>
+                  {String(status).charAt(0).toUpperCase() +
+                    String(status).slice(1)}
+                </Tag>
+              ),
+              value: status,
+            }))}
+          ></Select>
+        </Form.Item>
+
+        <Form.Item>
+          <Button type="primary" htmlType="submit">
+            Search
+          </Button>
+        </Form.Item>
+      </Form>
+
+      <Table {...tableProps} rowKey="id">
         <Table.Column title="ID" dataIndex="id" key="id" width={60} />
         <Table.Column title="Name" dataIndex="name" key="name" />
         <Table.Column
           title="Status"
           dataIndex="status"
           key="status"
-          render={(status: string) => (
-            <Tag color={status === "online" ? "green" : "red"}>
-              {status.toUpperCase()}
+          render={(status: DeviceStatus) => (
+            <Tag color={statusColors[status]} style={{ margin: 0 }}>
+              {status}
             </Tag>
           )}
         />
         <Table.Column
-          render={(val) => val ?? "-"}
           title="Temperature"
           dataIndex="temp"
           key="temp"
+          render={(val) => val ?? "-"}
         />
         <Table.Column
-          render={(val) => val ?? "-"}
           title="Humidity"
           dataIndex="humi"
           key="humi"
+          render={(val) => val ?? "-"}
         />
         <Table.Column
-          render={(val) => val ?? "-"}
           title="Lux"
           dataIndex="lux"
           key="lux"
+          render={(val) => val ?? "-"}
         />
-
         <Table.Column
           title="Updated At"
           dataIndex="updatedAt"

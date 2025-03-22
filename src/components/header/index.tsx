@@ -47,11 +47,7 @@ export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = ({
           defaultChecked={mode === "light"}
         />
         <Space style={{ marginLeft: "8px" }} size="middle">
-          {user?.firstName && user.lastName && (
-            <Text strong>
-              {user.firstName} {user.lastName}
-            </Text>
-          )}
+          {user?.fullName && <Text strong>{user.fullName}</Text>}
         </Space>
       </Space>
     </AntdLayout.Header>

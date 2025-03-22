@@ -26,7 +26,6 @@ import {
 } from "@refinedev/core";
 import dayjs from "dayjs";
 import { UserCreateModal } from "../../components/users/CreateModal";
-import { useEffect } from "react";
 
 const { RangePicker } = DatePicker;
 const roleColors: Record<UserRole, string> = {

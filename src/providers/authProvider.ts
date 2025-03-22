@@ -15,6 +15,7 @@ import { extractRoleInfoFromToken } from "../utility/user";
 import { axiosInstance } from "../utility/axios";
 import { AxiosResponse } from "axios";
 import { IUser } from "interfaces/user";
+import { connectSocket } from "./liveProvider";
 
 export const authProvider: AuthProvider = {
   login: async ({ email, password }) => {
@@ -43,7 +44,7 @@ export const authProvider: AuthProvider = {
         const userRoleId = extractRoleInfoFromToken(data.token);
         const resourcePathToRedirect =
           userRoleId?.id === 1 ? "/users" : "/users";
-
+        connectSocket();
         return {
           success: true,
           redirectTo: resourcePathToRedirect,
@@ -91,8 +92,9 @@ export const authProvider: AuthProvider = {
     };
   },
   getIdentity: async (): Promise<any> => {
-    const data: AxiosResponse<IUser> = await axiosInstance.get(`/auth/me`);
-    return data.data;
+    console.log;
+    // const data: AxiosResponse<IUser> = await axiosInstance.get(`/auth/me`);
+    // return data.data;
   },
   getPermissions: async (): Promise<any> => {
     const token = localStorage.getItem(TOKEN_KEY);

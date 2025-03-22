@@ -12,6 +12,7 @@ export { axiosInstance };
 
 const refreshAxios = axios.create();
 axiosInstance.defaults.baseURL = API_URL;
+
 axiosInstance.interceptors.request.use(
   async (request: InternalAxiosRequestConfig) => {
     const tokenExpiresAt = parseInt(
