@@ -106,7 +106,7 @@ export const DeviceList = () => {
         </Form.Item>
       </Form>
 
-      <Table {...tableProps} rowKey="id">
+      <Table {...tableProps} dataSource={devices} rowKey="id">
         <Table.Column title="ID" dataIndex="id" key="id" width={60} />
         <Table.Column title="Name" dataIndex="name" key="name" />
         <Table.Column
