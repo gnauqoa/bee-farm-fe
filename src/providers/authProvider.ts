@@ -8,7 +8,6 @@ import {
   REFRESH_TOKEN_KEY,
   TOKEN_KEY,
   TOKEN_EXPIRES_AT_KEY,
-  API_URL,
   USER_DATA_KEY,
 } from "../constants";
 import { extractRoleInfoFromToken } from "../utility/user";
@@ -92,9 +91,8 @@ export const authProvider: AuthProvider = {
     };
   },
   getIdentity: async (): Promise<any> => {
-    console.log;
-    // const data: AxiosResponse<IUser> = await axiosInstance.get(`/auth/me`);
-    // return data.data;
+    const data: AxiosResponse<IUser> = await axiosInstance.get(`/auth/me`);
+    return data.data;
   },
   getPermissions: async (): Promise<any> => {
     const token = localStorage.getItem(TOKEN_KEY);

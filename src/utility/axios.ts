@@ -15,37 +15,37 @@ axiosInstance.defaults.baseURL = API_URL;
 
 axiosInstance.interceptors.request.use(
   async (request: InternalAxiosRequestConfig) => {
-    const tokenExpiresAt = parseInt(
-      localStorage.getItem(TOKEN_EXPIRES_AT_KEY) || "0",
-      10
-    );
-    const currentTime = Date.now();
-    if (tokenExpiresAt - currentTime <= TIME_THRESHOLD) {
-      localStorage.removeItem(TOKEN_KEY);
-      // handleLogout();
-      // const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
-
-      // try {
-      //   const res = await refreshAxios.post(
-      //     `${API_URL}/auth/refresh`,
-      //     {},
-      //     {
-      //       headers: {
-      //         Authorization: "Bearer " + refreshToken,
-      //       },
-      //     }
-      //   );
-
-      //   const { token, tokenExpires } = res.data;
-
-      //   localStorage.setItem(TOKEN_KEY, token);
-      //   localStorage.setItem(TOKEN_EXPIRES_AT_KEY, tokenExpires);
-      // } catch (error) {
-      //   handleLogout();
-      // }
-    }
-
     const token = localStorage.getItem(TOKEN_KEY);
+    if (token) {
+      const tokenExpiresAt = parseInt(
+        localStorage.getItem(TOKEN_EXPIRES_AT_KEY) || "0",
+        10
+      );
+      const currentTime = Date.now();
+      if (tokenExpiresAt - currentTime <= TIME_THRESHOLD) {
+        handleLogout();
+        // const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
+
+        // try {
+        //   const res = await refreshAxios.post(
+        //     `${API_URL}/auth/refresh`,
+        //     {},
+        //     {
+        //       headers: {
+        //         Authorization: "Bearer " + refreshToken,
+        //       },
+        //     }
+        //   );
+
+        //   const { token, tokenExpires } = res.data;
+
+        //   localStorage.setItem(TOKEN_KEY, token);
+        //   localStorage.setItem(TOKEN_EXPIRES_AT_KEY, tokenExpires);
+        // } catch (error) {
+        //   handleLogout();
+        // }
+      }
+    }
 
     if (request.headers) {
       request.headers["Authorization"] = `Bearer ${token}`;
@@ -63,6 +63,7 @@ axiosInstance.interceptors.response.use(
       message: (error.response?.data as any)?.message ?? "Something went wrong",
       statusCode: error.response?.status ?? 500,
     };
+
     if (error.response?.status === 401) {
       handleLogout();
     }
@@ -70,7 +71,6 @@ axiosInstance.interceptors.response.use(
   }
 );
 
-// 🔐 Hàm logout
 const handleLogout = () => {
   localStorage.removeItem(TOKEN_KEY);
   localStorage.removeItem(REFRESH_TOKEN_KEY);

@@ -2,19 +2,19 @@ import { TOKEN_KEY } from "../constants";
 import { LiveProvider } from "@refinedev/core";
 import { io } from "socket.io-client";
 
-const getToken = () => localStorage.getItem(TOKEN_KEY);
+const token = localStorage.getItem(TOKEN_KEY);
 
 export const socket = io("http://localhost:3000", {
   auth: {
-    token: getToken(),
+    token: token,
   },
-  autoConnect: true,
+  autoConnect: !!token,
 });
 
 // Function to reconnect with updated token
 export const connectSocket = () => {
   console.log("Connecting socket...");
-  socket.auth = { token: getToken() };
+  socket.auth = { token: localStorage.getItem(TOKEN_KEY) };
   socket.connect();
 };
 

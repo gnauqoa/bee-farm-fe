@@ -7,4 +7,4 @@ export const TOKEN_EXPIRES_AT_KEY =
   import.meta.env.VITE_TOKEN_EXPIRES_AT_KEY ?? "token-expires";
 export const USER_DATA_KEY = import.meta.env.USER_DATA_KEY ?? "user-data";
 export const TIME_THRESHOLD =
-  import.meta.env.VITE_TIME_THRESHOLD ?? 60 * 60 * 1000;
+  import.meta.env.VITE_TIME_THRESHOLD ?? 60 * 1000;
