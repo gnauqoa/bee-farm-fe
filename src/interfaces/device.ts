@@ -1,7 +1,14 @@
+import { IUser } from "./user";
+
 export enum DeviceStatus {
   Offline = "offline",
   Online = "online",
 }
+
+export const statusColors: Record<DeviceStatus, string> = {
+  [DeviceStatus.Online]: "green",
+  [DeviceStatus.Offline]: "red",
+};
 
 export interface IDevice {
   id: number;
@@ -19,4 +26,5 @@ export interface IDevice {
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
+  user: IUser;
 }

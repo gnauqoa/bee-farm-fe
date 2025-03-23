@@ -1,16 +1,12 @@
-import { useTable } from "@refinedev/antd";
-import { Table, Tag, Input, Select, Button, Form } from "antd";
+import { EditButton, ShowButton, useTable } from "@refinedev/antd";
+import { Table, Tag, Input, Select, Button, Form, Space } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import { useEffect, useState, useMemo } from "react";
-import { IDevice } from "../../interfaces/device";
+import { IDevice, statusColors } from "../../interfaces/device";
 import { socket } from "../../providers/liveProvider";
 import { CrudFilters } from "@refinedev/core";
 import { DeviceStatus } from "../../interfaces/device";
-
-const statusColors: Record<DeviceStatus, string> = {
-  [DeviceStatus.Online]: "green",
-  [DeviceStatus.Offline]: "red",
-};
+import { capitalize } from "../../utility/text";
 
 export const DeviceList = () => {
   const { tableProps, searchFormProps, tableQuery } = useTable<IDevice>({
@@ -90,8 +86,7 @@ export const DeviceList = () => {
             options={Object.values(DeviceStatus).map((status) => ({
               label: (
                 <Tag color={statusColors[status]} style={{ margin: 0 }}>
-                  {String(status).charAt(0).toUpperCase() +
-                    String(status).slice(1)}
+                  {capitalize(status)}
                 </Tag>
               ),
               value: status,
@@ -115,7 +110,7 @@ export const DeviceList = () => {
           key="status"
           render={(status: DeviceStatus) => (
             <Tag color={statusColors[status]} style={{ margin: 0 }}>
-              {status}
+              {capitalize(status)}
             </Tag>
           )}
         />
@@ -142,6 +137,16 @@ export const DeviceList = () => {
           dataIndex="updatedAt"
           key="updatedAt"
           render={(date: string) => new Date(date).toLocaleString()}
+        />
+        <Table.Column
+          title="Actions"
+          dataIndex="actions"
+          render={(_, record) => (
+            <Space>
+              <EditButton hideText size="small" recordItemId={record.id} />
+              <ShowButton hideText size="small" recordItemId={record.id} />
+            </Space>
+          )}
         />
       </Table>
     </>

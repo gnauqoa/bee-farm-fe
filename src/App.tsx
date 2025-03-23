@@ -21,10 +21,10 @@ import { accessControlProvider } from "./providers/accessControlProvider";
 import routerBindings from "@refinedev/react-router";
 import AppLogo from "./components/AppLogo";
 import { Header } from "./components";
-import { UserEdit, UserList, UserShow } from "./pages/users";
+import { UserEdit, UserList } from "./pages/users";
 import { API_URL } from "./constants";
 import { axiosInstance } from "./utility/axios";
-import { DeviceEdit, DeviceList } from "./pages/devices";
+import { DeviceEdit, DeviceList, DeviceShow } from "./pages/devices";
 import { websocketProvider } from "./providers/liveProvider";
 
 const App: React.FC = () => {
@@ -46,7 +46,20 @@ const App: React.FC = () => {
                 warnWhenUnsavedChanges: true,
               }}
               resources={[
-                { name: "devices", list: "/devices" },
+                {
+                  name: "devices",
+                  list: "/devices",
+                  edit: "/devices/edit/:id",
+                  show: "/devices/:id",
+                  meta: {
+                    canDelete: true,
+                    icon: (
+                      <TeamOutlined
+                        style={{ fontSize: "16px", color: "#08c" }}
+                      />
+                    ),
+                  },
+                },
                 {
                   name: "users",
                   list: "/users",
@@ -90,11 +103,11 @@ const App: React.FC = () => {
                   <Route path="/devices">
                     <Route index element={<DeviceList />} />
                     <Route path="edit/:id" element={<DeviceEdit />} />
+                    <Route path=":id" element={<DeviceShow />} />
                   </Route>
                   <Route path="/users">
                     <Route index element={<UserList />} />
                     <Route path="edit/:id" element={<UserEdit />} />
-                    <Route path="show/:id" element={<UserShow />} />
                   </Route>
                   <Route path="*" element={<ErrorComponent />} />
                 </Route>
