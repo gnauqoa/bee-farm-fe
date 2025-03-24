@@ -6,16 +6,15 @@ const { Title } = Typography;
 export const SwitchCard = ({
   title,
   onChange,
+  value,
   defaultChecked = false,
 }: {
   title: string;
   onChange?: (checked: boolean) => void;
+  value: boolean;
   defaultChecked?: boolean;
 }) => {
-  const [isOn, setIsOn] = useState(defaultChecked);
-
   const handleToggle = (checked: boolean) => {
-    setIsOn(checked);
     if (onChange) onChange(checked);
   };
 
@@ -23,7 +22,7 @@ export const SwitchCard = ({
     <Card
       hoverable
       style={{
-        background: isOn ? "#1890ff" : "#1e1e2f",
+        background: value ? "#1890ff" : "#1e1e2f",
         color: "white",
         borderRadius: "12px",
         transition:
@@ -37,7 +36,11 @@ export const SwitchCard = ({
             {title}
           </Title>
         </Flex>
-        <Switch checked={isOn} onChange={handleToggle} />
+        <Switch
+          checked={value}
+          defaultChecked={defaultChecked}
+          onChange={handleToggle}
+        />
       </Flex>
     </Card>
   );
