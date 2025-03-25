@@ -7,6 +7,12 @@ import { Icon } from "@iconify/react";
 import { socket } from "../../providers/liveProvider";
 import { capitalize } from "../../utility/text";
 import { SensorCard, SwitchCard } from "../../components/card";
+import {
+  DEVICE_DATA_CHANNEL,
+  JOIN_DEVICE_ROOM_CHANNEL,
+  LEAVE_DEVICE_ROOM_CHANNEL,
+  UPDATE_DEVICE_CHANNEL,
+} from "../../constants";
 
 const { Title } = Typography;
 
@@ -17,19 +23,21 @@ export const DeviceShow = () => {
   const [device, setDevice] = useState<IDevice | null>(null);
 
   const handleDeviceUpdate = (updatedDevice: IDevice) => {
-    console.log("Device updated", updatedDevice);
     setDevice(updatedDevice);
   };
 
   useEffect(() => {
-    if (record) {
-      setDevice(record);
-      socket.on(`device:${record.id}`, handleDeviceUpdate);
+    if (!record) return;
 
-      return () => {
-        socket.off(`device:${record.id}`, handleDeviceUpdate);
-      };
-    }
+    setDevice(record);
+
+    socket.emit(JOIN_DEVICE_ROOM_CHANNEL, record.id);
+    socket.on(DEVICE_DATA_CHANNEL, handleDeviceUpdate);
+
+    return () => {
+      socket.emit(LEAVE_DEVICE_ROOM_CHANNEL, record.id);
+      socket.off(DEVICE_DATA_CHANNEL, handleDeviceUpdate);
+    };
   }, [record]);
 
   if (!device) {
@@ -97,7 +105,7 @@ export const DeviceShow = () => {
               title="Button 1"
               value={device.btn1}
               onChange={(checked) => {
-                socket.emit("device:update-pin", {
+                socket.emit(UPDATE_DEVICE_CHANNEL, {
                   ...device,
                   btn1: checked,
                 } as IDevice);
@@ -109,7 +117,7 @@ export const DeviceShow = () => {
               title="Button 2"
               value={device.btn2}
               onChange={(checked) => {
-                socket.emit("device:update-pin", {
+                socket.emit(UPDATE_DEVICE_CHANNEL, {
                   ...device,
                   btn2: checked,
                 } as IDevice);
@@ -121,7 +129,7 @@ export const DeviceShow = () => {
               title="Button 3"
               value={device.btn3}
               onChange={(checked) => {
-                socket.emit("device:update-pin", {
+                socket.emit(UPDATE_DEVICE_CHANNEL, {
                   ...device,
                   btn3: checked,
                 } as IDevice);
@@ -133,7 +141,7 @@ export const DeviceShow = () => {
               title="Button 4"
               value={device.btn4}
               onChange={(checked) => {
-                socket.emit("device:update-pin", {
+                socket.emit(UPDATE_DEVICE_CHANNEL, {
                   ...device,
                   btn4: checked,
                 } as IDevice);
