@@ -15,8 +15,16 @@ export const socket = io("http://localhost:3000", {
   autoConnect: !!token,
 });
 
-// Function to reconnect with updated token
+const handleJoinedRoom = (data: any) => {
+  console.log("Joined room: ", data);
+};
+
+const handleLeavedRoom = (data: any) => {
+  console.log("Leaved room: ", data);
+};
+
 export const connectSocket = () => {
+  socket.disconnect();
   console.log("Connecting socket...");
   socket.auth = { token: localStorage.getItem(TOKEN_KEY) };
   socket.connect();
@@ -24,18 +32,14 @@ export const connectSocket = () => {
 
 socket.on("connect", () => {
   console.log("Socket connected");
-  socket.on(HANDLE_JOINED_DEVICE_ROOM_CHANNEL, (data) =>
-    console.log("Joined room: ", data)
-  );
-  socket.on(HANDLE_LEAVED_DEVICE_ROOM_CHANNEL, (data) =>
-    console.log("Leaved room: ", data)
-  );
+  socket.on(HANDLE_JOINED_DEVICE_ROOM_CHANNEL, handleJoinedRoom);
+  socket.on(HANDLE_LEAVED_DEVICE_ROOM_CHANNEL, handleLeavedRoom);
 });
 
 socket.on("disconnect", () => {
   console.log("Socket disconnected");
-  socket.off(HANDLE_JOINED_DEVICE_ROOM_CHANNEL);
-  socket.off(HANDLE_LEAVED_DEVICE_ROOM_CHANNEL);
+  socket.off(HANDLE_JOINED_DEVICE_ROOM_CHANNEL, handleJoinedRoom);
+  socket.off(HANDLE_LEAVED_DEVICE_ROOM_CHANNEL, handleLeavedRoom);
 });
 
 export const websocketProvider: LiveProvider = {

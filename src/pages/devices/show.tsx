@@ -8,7 +8,7 @@ import { socket } from "../../providers/liveProvider";
 import { capitalize } from "../../utility/text";
 import { SensorCard, SwitchCard } from "../../components/card";
 import {
-  DEVICE_DATA_CHANNEL,
+  HANDLE_DEVICE_DATA_CHANNEL,
   JOIN_DEVICE_ROOM_CHANNEL,
   LEAVE_DEVICE_ROOM_CHANNEL,
   UPDATE_DEVICE_CHANNEL,
@@ -32,11 +32,11 @@ export const DeviceShow = () => {
     setDevice(record);
 
     socket.emit(JOIN_DEVICE_ROOM_CHANNEL, record.id);
-    socket.on(DEVICE_DATA_CHANNEL, handleDeviceUpdate);
+    socket.on(HANDLE_DEVICE_DATA_CHANNEL, handleDeviceUpdate);
 
     return () => {
       socket.emit(LEAVE_DEVICE_ROOM_CHANNEL, record.id);
-      socket.off(DEVICE_DATA_CHANNEL, handleDeviceUpdate);
+      socket.off(HANDLE_DEVICE_DATA_CHANNEL, handleDeviceUpdate);
     };
   }, [record]);
 

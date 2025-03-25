@@ -7,6 +7,11 @@ import { socket } from "../../providers/liveProvider";
 import { CrudFilters } from "@refinedev/core";
 import { DeviceStatus } from "../../interfaces/device";
 import { capitalize } from "../../utility/text";
+import {
+  HANDLE_DEVICE_DATA_CHANNEL,
+  JOIN_DEVICE_ROOM_CHANNEL,
+  LEAVE_DEVICE_ROOM_CHANNEL,
+} from "../../constants";
 
 export const DeviceList = () => {
   const { tableProps, searchFormProps, tableQuery } = useTable<IDevice>({
@@ -50,16 +55,16 @@ export const DeviceList = () => {
 
     const newDevices = tableQuery.data.data;
     setDevices(newDevices);
-
-    newDevices.forEach((device: IDevice) => {
-      console.log("Subscribing -", `device:${device.id}`);
-      socket.on(`device:${device.id}`, handleDeviceUpdate);
-    });
+    for (const device of newDevices) {
+      socket.emit(JOIN_DEVICE_ROOM_CHANNEL, device.id);
+    }
+    socket.on(HANDLE_DEVICE_DATA_CHANNEL, handleDeviceUpdate);
 
     return () => {
-      newDevices.forEach((device: IDevice) => {
-        socket.off(`device:${device.id}`, handleDeviceUpdate);
-      });
+      socket.off(HANDLE_DEVICE_DATA_CHANNEL, handleDeviceUpdate);
+      for (const device of newDevices) {
+        socket.emit(LEAVE_DEVICE_ROOM_CHANNEL, device.id);
+      }
     };
   }, [tableQuery.data?.data]);
 
