@@ -17,6 +17,7 @@ export const DeviceShow = () => {
   const [device, setDevice] = useState<IDevice | null>(null);
 
   const handleDeviceUpdate = (updatedDevice: IDevice) => {
+    console.log("Device updated", updatedDevice);
     setDevice(updatedDevice);
   };
 
@@ -94,7 +95,6 @@ export const DeviceShow = () => {
           <Col xs={24} sm={12} md={8} lg={6}>
             <SwitchCard
               title="Button 1"
-              defaultChecked={device.btn1}
               value={device.btn1}
               onChange={(checked) => {
                 socket.emit("device:update-pin", {
@@ -108,7 +108,6 @@ export const DeviceShow = () => {
             <SwitchCard
               title="Button 2"
               value={device.btn2}
-              defaultChecked={device.btn2}
               onChange={(checked) => {
                 socket.emit("device:update-pin", {
                   ...device,
@@ -120,7 +119,6 @@ export const DeviceShow = () => {
           <Col xs={24} sm={12} md={8} lg={6}>
             <SwitchCard
               title="Button 3"
-              defaultChecked={device.btn3}
               value={device.btn3}
               onChange={(checked) => {
                 socket.emit("device:update-pin", {
@@ -133,7 +131,6 @@ export const DeviceShow = () => {
           <Col xs={24} sm={12} md={8} lg={6}>
             <SwitchCard
               title="Button 4"
-              defaultChecked={device.btn4}
               value={device.btn4}
               onChange={(checked) => {
                 socket.emit("device:update-pin", {
