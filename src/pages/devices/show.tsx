@@ -182,6 +182,42 @@ export const DeviceShow = () => {
           </Col>
           <Col xs={24} sm={12} md={8} lg={6}>
             <SliderCard
+              title="Humi Range"
+              value={device.humiRange || 0}
+              min={0}
+              max={100}
+              step={1}
+              onChange={(value) => {
+                setDevice({ ...device, humiRange: value });
+              }}
+              onFinalChange={(value) => {
+                socket.emit(UPDATE_DEVICE_CHANNEL, {
+                  ...device,
+                  humiRange: value,
+                });
+              }}
+            />
+          </Col>
+          <Col xs={24} sm={12} md={8} lg={6}>
+            <SliderCard
+              title="Lux Range"
+              value={device.luxRange || 0}
+              min={0}
+              max={100}
+              step={1}
+              onChange={(value) => {
+                setDevice({ ...device, luxRange: value });
+              }}
+              onFinalChange={(value) => {
+                socket.emit(UPDATE_DEVICE_CHANNEL, {
+                  ...device,
+                  luxRange: value,
+                });
+              }}
+            />
+          </Col>
+          <Col xs={24} sm={12} md={8} lg={6}>
+            <SliderCard
               title="Mosfet Speed"
               value={device.mosfetSpeed || 0}
               min={0}

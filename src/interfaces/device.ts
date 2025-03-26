@@ -23,6 +23,8 @@ export interface IDevice {
   btn3: boolean;
   btn4: boolean;
   tempRange: number;
+  humiRange: number;
+  luxRange: number;
   mosfetSpeed: number;
   autoControl: boolean;
   position: string | null;
