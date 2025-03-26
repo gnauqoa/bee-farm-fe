@@ -126,7 +126,7 @@ export const DeviceShow = () => {
           </Col>
           <Col xs={24} sm={12} md={8} lg={6}>
             <SwitchCard
-              title="Button 3"
+              title="Light"
               value={device.btn3}
               onChange={(checked) => {
                 socket.emit(UPDATE_DEVICE_CHANNEL, {
@@ -138,12 +138,24 @@ export const DeviceShow = () => {
           </Col>
           <Col xs={24} sm={12} md={8} lg={6}>
             <SwitchCard
-              title="Button 4"
+              title="Pump"
               value={device.btn4}
               onChange={(checked) => {
                 socket.emit(UPDATE_DEVICE_CHANNEL, {
                   ...device,
                   btn4: checked,
+                } as IDevice);
+              }}
+            />
+          </Col>
+          <Col xs={24} sm={12} md={8} lg={6}>
+            <SwitchCard
+              title="Auto control"
+              value={device.autoControl}
+              onChange={(checked) => {
+                socket.emit(UPDATE_DEVICE_CHANNEL, {
+                  ...device,
+                  autoControl: checked,
                 } as IDevice);
               }}
             />
