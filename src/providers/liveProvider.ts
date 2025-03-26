@@ -4,52 +4,52 @@ import {
   TOKEN_KEY,
 } from "../constants";
 import { LiveProvider } from "@refinedev/core";
-import { io } from "socket.io-client";
+import { io, Socket } from "socket.io-client";
 
-const token = localStorage.getItem(TOKEN_KEY);
+let socketInstance: Socket | null = null;
 
-export const socket = io("http://localhost:3000", {
-  auth: {
-    token: token,
-  },
-  autoConnect: !!token,
-});
+const initializeSocket = (): Socket => {
+  if (!socketInstance) {
+    const token = localStorage.getItem(TOKEN_KEY);
+    socketInstance = io("http://localhost:3000", {
+      auth: { token },
+      autoConnect: true,
+    });
 
-const handleJoinedRoom = (data: any) => {
-  console.log("Joined room: ", data);
-};
+    socketInstance.on("connect", () => {
+      console.log("Socket connected");
+    });
 
-const handleLeavedRoom = (data: any) => {
-  console.log("Leaved room: ", data);
+    socketInstance.on("disconnect", () => {
+      console.log("Socket disconnected");
+    });
+
+    socketInstance.on(HANDLE_JOINED_DEVICE_ROOM_CHANNEL, (data: any) => {
+      console.log("Joined room: ", data);
+    });
+    socketInstance.on(HANDLE_LEAVED_DEVICE_ROOM_CHANNEL, (data: any) => {
+      console.log("Leaved room: ", data);
+    });
+  }
+  return socketInstance;
 };
 
 export const connectSocket = () => {
-  socket.disconnect();
-  console.log("Connecting socket...");
-  socket.auth = { token: localStorage.getItem(TOKEN_KEY) };
-  socket.connect();
+  const socket = initializeSocket();
+  if (!socket.connected) {
+    console.log("Connecting socket...");
+    socket.auth = { token: localStorage.getItem(TOKEN_KEY) };
+    socket.connect();
+  }
+  return socket;
 };
-
-socket.on("connect", () => {
-  console.log("Socket connected");
-  socket.on(HANDLE_JOINED_DEVICE_ROOM_CHANNEL, handleJoinedRoom);
-  socket.on(HANDLE_LEAVED_DEVICE_ROOM_CHANNEL, handleLeavedRoom);
-});
-
-socket.on("disconnect", () => {
-  console.log("Socket disconnected");
-  socket.off(HANDLE_JOINED_DEVICE_ROOM_CHANNEL, handleJoinedRoom);
-  socket.off(HANDLE_LEAVED_DEVICE_ROOM_CHANNEL, handleLeavedRoom);
-});
 
 export const websocketProvider: LiveProvider = {
   unsubscribe: (subscription) => {
     subscription.unsubscribe();
   },
   subscribe: ({ channel, callback }) => {
-    if (!socket.connected) {
-      connectSocket(); // Ensure connection is established with token
-    }
+    const socket = connectSocket();
 
     const eventHandler = (data: any) => callback(data);
     socket.on(channel, eventHandler);
@@ -61,9 +61,9 @@ export const websocketProvider: LiveProvider = {
     };
   },
   publish: ({ channel, payload }) => {
-    if (!socket.connected) {
-      connectSocket();
-    }
+    const socket = connectSocket();
     socket.emit(channel, payload);
   },
 };
+
+export const socket = initializeSocket();
