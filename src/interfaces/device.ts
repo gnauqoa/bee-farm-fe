@@ -22,6 +22,8 @@ export interface IDevice {
   btn2: boolean;
   btn3: boolean;
   btn4: boolean;
+  tempRange: number;
+  mosfetSpeed: number;
   position: string | null;
   createdAt: string;
   updatedAt: string;

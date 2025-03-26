@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
 import { socket } from "../../providers/liveProvider";
 import { capitalize } from "../../utility/text";
-import { SensorCard, SwitchCard } from "../../components/card";
+import { SensorCard, SliderCard, SwitchCard } from "../../components/card";
 import {
   HANDLE_DEVICE_DATA_CHANNEL,
   JOIN_DEVICE_ROOM_CHANNEL,
@@ -145,6 +145,44 @@ export const DeviceShow = () => {
                   ...device,
                   btn4: checked,
                 } as IDevice);
+              }}
+            />
+          </Col>
+        </Row>
+        <Row gutter={[16, 16]}>
+          <Col xs={24} sm={12} md={8} lg={6}>
+            <SliderCard
+              title="Temp Range"
+              value={device.tempRange || 0}
+              min={0}
+              max={100}
+              step={1}
+              onChange={(value) => {
+                setDevice({ ...device, tempRange: value });
+              }}
+              onFinalChange={(value) => {
+                socket.emit(UPDATE_DEVICE_CHANNEL, {
+                  ...device,
+                  tempRange: value,
+                });
+              }}
+            />
+          </Col>
+          <Col xs={24} sm={12} md={8} lg={6}>
+            <SliderCard
+              title="Mosfet Speed"
+              value={device.mosfetSpeed || 0}
+              min={0}
+              max={100}
+              step={1}
+              onChange={(value) => {
+                setDevice({ ...device, mosfetSpeed: value });
+              }}
+              onFinalChange={(value) => {
+                socket.emit(UPDATE_DEVICE_CHANNEL, {
+                  ...device,
+                  mosfetSpeed: value,
+                });
               }}
             />
           </Col>
