@@ -21,7 +21,7 @@ export const adapter = new StringAdapter(`
 p, 1, users, (list)|(create)|(edit)|(show)|(delete)
 p, 1, devices, (list)|(create)|(edit)|(show)|(delete)
 
-p, 2, coaching-students, (list)
-p, 2, student-lessons, (list)|(edit)
+p, 2, devices, (list)|(create)|(edit)|(show)|(delete)
+
 
 `);

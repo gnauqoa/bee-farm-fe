@@ -42,7 +42,7 @@ export const authProvider: AuthProvider = {
 
         const userRoleId = extractRoleInfoFromToken(data.token);
         const resourcePathToRedirect =
-          userRoleId?.id === 1 ? "/users" : "/users";
+          userRoleId?.id === 1 ? "/users" : "devices";
         connectSocket();
         return {
           success: true,
