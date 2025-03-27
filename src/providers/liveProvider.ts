@@ -1,6 +1,7 @@
 import {
   HANDLE_JOINED_DEVICE_ROOM_CHANNEL,
   HANDLE_LEAVED_DEVICE_ROOM_CHANNEL,
+  LIVE_PROVIDER_URL,
   TOKEN_KEY,
 } from "../constants";
 import { LiveProvider } from "@refinedev/core";
@@ -11,7 +12,7 @@ let socketInstance: Socket | null = null;
 const initializeSocket = (): Socket => {
   if (!socketInstance) {
     const token = localStorage.getItem(TOKEN_KEY);
-    socketInstance = io("http://localhost:3000", {
+    socketInstance = io(LIVE_PROVIDER_URL, {
       auth: { token },
       autoConnect: true,
     });

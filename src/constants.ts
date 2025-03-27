@@ -1,5 +1,7 @@
 export const API_URL =
   import.meta.env.VITE_API_URL ?? "http://localhost:3000/api/v1";
+export const LIVE_PROVIDER_URL =
+  import.meta.env.VITE_LIVE_PROVIDER_URL ?? "http://localhost:3000";
 export const TOKEN_KEY = import.meta.env.VITE_TOKEN_KEY ?? "token";
 export const REFRESH_TOKEN_KEY =
   import.meta.env.VITE_REFRESH_TOKEN_KEY ?? "refresh-token";
