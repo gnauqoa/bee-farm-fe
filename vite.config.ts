@@ -6,6 +6,9 @@ import { NodeModulesPolyfillPlugin } from "@esbuild-plugins/node-modules-polyfil
 import rollupNodePolyFill from "rollup-plugin-polyfill-node";
 
 export default defineConfig({
+  preview: {
+    allowedHosts: ['bee-farm-fe.onrender.com'],
+  },
   resolve: {
     alias: {
       "@components": path.resolve(__dirname, "src/components"),
