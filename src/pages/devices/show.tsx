@@ -23,6 +23,7 @@ export const DeviceShow = () => {
   const [device, setDevice] = useState<IDevice | null>(null);
 
   const handleDeviceUpdate = (updatedDevice: IDevice) => {
+    console.log("Device updated: ", updatedDevice);
     setDevice(updatedDevice);
   };
 
