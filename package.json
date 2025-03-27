@@ -7,7 +7,7 @@
     "build": "tsc && refine build",
     "dev": "refine dev",
     "refine": "refine",
-    "start": "refine start"
+    "start": "refine start --port 10000 --host 0.0.0.0"
   },
   "browserslist": {
     "production": [
