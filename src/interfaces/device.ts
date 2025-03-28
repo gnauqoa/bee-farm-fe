@@ -31,5 +31,6 @@ export interface IDevice {
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
+  lastUpdate: string | null;
   user: IUser;
 }

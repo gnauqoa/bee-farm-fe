@@ -13,7 +13,10 @@ import {
   LEAVE_DEVICE_ROOM_CHANNEL,
   UPDATE_DEVICE_CHANNEL,
 } from "../../constants";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 
+dayjs.extend(relativeTime);
 const { Title } = Typography;
 
 export const DeviceShow = () => {
@@ -23,7 +26,6 @@ export const DeviceShow = () => {
   const [device, setDevice] = useState<IDevice | null>(null);
 
   const handleDeviceUpdate = (updatedDevice: IDevice) => {
-    console.log("Device updated: ", updatedDevice);
     setDevice(updatedDevice);
   };
 
@@ -56,6 +58,18 @@ export const DeviceShow = () => {
             status={device.status === DeviceStatus.Online ? "success" : "error"}
             text={capitalize(device.status)}
           />
+          {device.lastUpdate ? (
+            <>
+              <Title level={5} style={{ marginBottom: 0 }}>
+                -
+              </Title>
+              <Title level={5} style={{ margin: 0 }}>
+                {dayjs(device.lastUpdate).from(dayjs())}
+              </Title>
+            </>
+          ) : (
+            <></>
+          )}
         </Flex>
         <Flex>
           <Link to={`/users/${device.user_id}`}>

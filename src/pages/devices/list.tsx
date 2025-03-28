@@ -1,4 +1,9 @@
-import { DeleteButton, EditButton, ShowButton, useTable } from "@refinedev/antd";
+import {
+  DeleteButton,
+  EditButton,
+  ShowButton,
+  useTable,
+} from "@refinedev/antd";
 import { Table, Tag, Input, Select, Button, Form, Space } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import { useEffect, useState, useMemo } from "react";
@@ -138,10 +143,12 @@ export const DeviceList = () => {
           render={(val) => val ?? "-"}
         />
         <Table.Column
-          title="Updated At"
-          dataIndex="updatedAt"
-          key="updatedAt"
-          render={(date: string) => new Date(date).toLocaleString()}
+          title="Last Update"
+          dataIndex="lastUpdate"
+          key="lastUpdate"
+          render={(date: string) =>
+            date ? new Date(date).toLocaleString() : "-"
+          }
         />
         <Table.Column
           title="Actions"
