@@ -10,7 +10,7 @@ import {
 } from "@refinedev/antd";
 import dataProvider from "@refinedev/nestjsx-crud";
 import { NavigateToResource, CatchAllNavigate } from "@refinedev/react-router";
-import { BrowserRouter, Routes, Route, Outlet } from "react-router";
+import { BrowserRouter, Routes, Route, Outlet, Navigate } from "react-router";
 import { TeamOutlined } from "@ant-design/icons";
 import { ConfigProvider } from "antd";
 import "@refinedev/antd/dist/reset.css";
@@ -100,6 +100,7 @@ const App: React.FC = () => {
                     </Authenticated>
                   }
                 >
+                  <Route path="/" element={<Navigate to={"/devices"} />} />
                   <Route path="/devices">
                     <Route index element={<DeviceList />} />
                     <Route path="edit/:id" element={<DeviceEdit />} />

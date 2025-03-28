@@ -1,4 +1,4 @@
-import { EditButton, ShowButton, useTable } from "@refinedev/antd";
+import { DeleteButton, EditButton, ShowButton, useTable } from "@refinedev/antd";
 import { Table, Tag, Input, Select, Button, Form, Space } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import { useEffect, useState, useMemo } from "react";
@@ -150,6 +150,7 @@ export const DeviceList = () => {
             <Space>
               <EditButton hideText size="small" recordItemId={record.id} />
               <ShowButton hideText size="small" recordItemId={record.id} />
+              <DeleteButton hideText size="small" recordItemId={record.id} />
             </Space>
           )}
         />

@@ -5,6 +5,7 @@ import {
   ShowButton,
   DateField,
   getDefaultSortOrder,
+  DeleteButton,
 } from "@refinedev/antd";
 import { SearchOutlined } from "@ant-design/icons";
 import {
@@ -228,6 +229,7 @@ export const UserList = () => {
             <Space>
               <EditButton hideText size="small" recordItemId={record.id} />
               <ShowButton hideText size="small" recordItemId={record.id} />
+              <DeleteButton hideText size="small" recordItemId={record.id} />
             </Space>
           )}
         />
