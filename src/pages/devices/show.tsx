@@ -91,7 +91,7 @@ export const DeviceShow = () => {
         <Flex vertical>
           <Flex gap={8} align="center">
             <Title level={5} style={{ marginBottom: 0 }}>
-              Device pass:
+              Device token:
             </Title>
             {deviceToken ? (
               <Typography.Text code copyable>
