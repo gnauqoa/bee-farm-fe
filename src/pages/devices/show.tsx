@@ -1,6 +1,6 @@
 import { Link, useShow } from "@refinedev/core";
 import { Show } from "@refinedev/antd";
-import { Badge, Col, Flex, Row, Typography } from "antd";
+import { Badge, Button, Col, Flex, message, Row, Typography } from "antd";
 import { DeviceStatus, IDevice } from "../../interfaces/device";
 import { useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
@@ -15,6 +15,8 @@ import {
 } from "../../constants";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { EyeOutlined, ReloadOutlined } from "@ant-design/icons"; // Import icons từ Ant Design
+import { axiosInstance } from "@refinedev/nestjsx-crud";
 
 dayjs.extend(relativeTime);
 const { Title } = Typography;
@@ -24,6 +26,20 @@ export const DeviceShow = () => {
   const { data, isLoading } = queryResult;
   const record = data?.data;
   const [device, setDevice] = useState<IDevice | null>(null);
+  const [deviceToken, setDeviceToken] = useState<string | null>(null);
+
+  const fetchDeviceToken = async () => {
+    if (!device) return;
+    try {
+      const response = await axiosInstance.get(
+        `/devices/${device.id}/password`
+      );
+      setDeviceToken(response.data.device_pass);
+      message.success("Device token fetched!");
+    } catch (error) {
+      message.error("Failed to fetch device token.");
+    }
+  };
 
   const handleDeviceUpdate = (updatedDevice: IDevice) => {
     setDevice(updatedDevice);
@@ -71,6 +87,30 @@ export const DeviceShow = () => {
             <></>
           )}
         </Flex>
+
+        <Flex vertical>
+          <Flex gap={8} align="center">
+            <Title level={5} style={{ marginBottom: 0 }}>
+              Device pass:
+            </Title>
+            {deviceToken ? (
+              <Typography.Text code copyable>
+                {deviceToken}
+              </Typography.Text>
+            ) : (
+              <>
+                <Typography.Text type="secondary">
+                  Click to reveal
+                </Typography.Text>
+                <Button
+                  icon={deviceToken ? <ReloadOutlined /> : <EyeOutlined />}
+                  onClick={fetchDeviceToken}
+                />
+              </>
+            )}
+          </Flex>
+        </Flex>
+
         <Flex>
           <Link to={`/users/${device.user_id}`}>
             <Title level={5}>{device.user.fullName}</Title>
