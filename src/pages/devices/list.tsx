@@ -146,6 +146,11 @@ export const DeviceList = () => {
           )}
         />
         <Table.Column
+          title="Author"
+          dataIndex={["user", "fullName"]}
+          key="user"
+        />
+        <Table.Column
           title="Temperature"
           dataIndex="temp"
           key="temp"
