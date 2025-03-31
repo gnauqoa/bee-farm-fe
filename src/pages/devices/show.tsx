@@ -35,9 +35,9 @@ export const DeviceShow = () => {
         `/devices/${device.id}/password`
       );
       setDeviceToken(response.data.device_pass);
-      message.success("Device token fetched!");
+      message.success("Device token created!");
     } catch (error) {
-      message.error("Failed to fetch device token.");
+      message.error("Failed to create device token.");
     }
   };
 

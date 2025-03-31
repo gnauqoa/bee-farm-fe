@@ -18,43 +18,51 @@ import {
   JOIN_DEVICE_ROOM_CHANNEL,
   LEAVE_DEVICE_ROOM_CHANNEL,
 } from "../../constants";
-import { CreateDeviceModal } from "../../components/devices";
+import { DeviceModal } from "../../components/devices";
 
 export const DeviceList = () => {
-  const { tableProps, searchFormProps, tableQuery } = useTable<IDevice>({
-    resource: "devices",
-    syncWithLocation: true,
-    onSearch: (params) => {
-      const filters: CrudFilters = [];
-      const { name, status } = params as any;
+  const { tableProps, searchFormProps, tableQuery, setFilters } =
+    useTable<IDevice>({
+      resource: "devices",
+      syncWithLocation: true,
+      onSearch: (params) => {
+        const filters: CrudFilters = [];
+        const { name, status } = params as any;
 
-      if (name) {
-        filters.push({
-          field: "name",
-          operator: "contains",
-          value: name,
-        });
-      }
+        if (name) {
+          filters.push({
+            field: "name",
+            operator: "contains",
+            value: name,
+          });
+        }
 
-      if (status) {
-        filters.push({
-          field: "status",
-          operator: "eq",
-          value: status,
-        });
-      }
+        if (status) {
+          filters.push({
+            field: "status",
+            operator: "eq",
+            value: status,
+          });
+        }
 
-      return filters;
-    },
-    defaultSetFilterBehavior: "replace",
-  });
+        return filters;
+      },
+      defaultSetFilterBehavior: "replace",
+    });
 
   const [devices, setDevices] = useState<IDevice[]>([]);
+  const [open, setOpen] = useState(false);
+  const [editDevice, setEditDevice] = useState<IDevice | undefined>(undefined);
 
   const handleDeviceUpdate = (updatedDevice: IDevice) => {
     setDevices((prevDevices) =>
       prevDevices.map((d) => (d.id === updatedDevice.id ? updatedDevice : d))
     );
+  };
+
+  const handleCloseModal = () => {
+    setOpen(false);
+    setEditDevice(undefined);
   };
 
   useEffect(() => {
@@ -76,7 +84,19 @@ export const DeviceList = () => {
   }, [tableQuery.data?.data]);
 
   return (
-    <List headerButtons={<CreateDeviceModal />}>
+    <List
+      headerButtons={
+        <Button
+          type="primary"
+          onClick={() => {
+            setEditDevice(undefined);
+            setOpen(true);
+          }}
+        >
+          Create Device
+        </Button>
+      }
+    >
       <Form
         layout="inline"
         {...searchFormProps}
@@ -103,7 +123,7 @@ export const DeviceList = () => {
               ),
               value: status,
             }))}
-          ></Select>
+          />
         </Form.Item>
 
         <Form.Item>
@@ -112,7 +132,6 @@ export const DeviceList = () => {
           </Button>
         </Form.Item>
       </Form>
-
       <Table {...tableProps} dataSource={devices} rowKey="id">
         <Table.Column title="ID" dataIndex="id" key="id" width={60} />
         <Table.Column title="Name" dataIndex="name" key="name" />
@@ -155,15 +174,29 @@ export const DeviceList = () => {
         <Table.Column
           title="Actions"
           dataIndex="actions"
-          render={(_, record) => (
+          render={(_, record: IDevice) => (
             <Space>
-              <EditButton hideText size="small" recordItemId={record.id} />
+              <EditButton
+                hideText
+                size="small"
+                recordItemId={record.id}
+                onClick={() => {
+                  setEditDevice(record);
+                  setOpen(true);
+                }}
+              />
               <ShowButton hideText size="small" recordItemId={record.id} />
               <DeleteButton hideText size="small" recordItemId={record.id} />
             </Space>
           )}
         />
       </Table>
+      <DeviceModal
+        open={open}
+        device={editDevice}
+        onCancel={handleCloseModal}
+        onSuccess={handleCloseModal}
+      />
     </List>
   );
 };

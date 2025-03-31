@@ -37,9 +37,9 @@ export const UserEdit = () => {
         initialValues={{
           fullName: userData?.fullName || "",
           email: userData?.email || "",
-          role: userData?.role.name || UserRole.USER, // Mặc định là USER nếu không có giá trị
-          status: userData?.status.name || UserStatus.ACTIVE, // Mặc định là ACTIVE nếu không có giá trị
-          createdAt: userData?.createdAt || "", // Chỉ để hiển thị, không chỉnh sửa
+          role: userData?.role.name || UserRole.USER,
+          status: userData?.status.name || UserStatus.ACTIVE,
+          createdAt: userData?.createdAt || "",
         }}
         onFinish={onSubmit}
       >
