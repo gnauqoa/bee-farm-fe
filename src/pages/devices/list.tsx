@@ -1,12 +1,13 @@
 import {
   DeleteButton,
   EditButton,
+  List,
   ShowButton,
   useTable,
 } from "@refinedev/antd";
 import { Table, Tag, Input, Select, Button, Form, Space } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { IDevice, statusColors } from "../../interfaces/device";
 import { socket } from "../../providers/liveProvider";
 import { CrudFilters } from "@refinedev/core";
@@ -17,6 +18,7 @@ import {
   JOIN_DEVICE_ROOM_CHANNEL,
   LEAVE_DEVICE_ROOM_CHANNEL,
 } from "../../constants";
+import { CreateDeviceModal } from "../../components/devices";
 
 export const DeviceList = () => {
   const { tableProps, searchFormProps, tableQuery } = useTable<IDevice>({
@@ -74,7 +76,7 @@ export const DeviceList = () => {
   }, [tableQuery.data?.data]);
 
   return (
-    <>
+    <List headerButtons={<CreateDeviceModal />}>
       <Form
         layout="inline"
         {...searchFormProps}
@@ -162,6 +164,6 @@ export const DeviceList = () => {
           )}
         />
       </Table>
-    </>
+    </List>
   );
 };
