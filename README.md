@@ -1,43 +1,64 @@
-<div align="center" style="margin: 30px;">
-<a href="https://refine.dev/">
-  <img alt="refine logo" src="https://refine.ams3.cdn.digitaloceanspaces.com/readme/refine-readme-banner.png">
-</a>
+# Bee farm frontend
 
-</br>
-</br>
+Bee Farm is an IoT application designed for beekeeping farm management. It enables real-time monitoring and control of environmental factors such as temperature, humidity, and light using sensors and actuators. Using [NestJS REST API](https://github.com/brocoders/nestjs-boilerplate) + [@nestjsx/crud](https://github.com/nestjsx/crud) and [Refine](https://refine.dev).
 
-<div align="center">
-    <a href="https://refine.dev">Home Page</a> |
-    <a href="https://discord.gg/refine">Discord</a> |
-    <a href="https://refine.dev/examples/">Examples</a> |
-    <a href="https://refine.dev/blog/">Blog</a> |
-    <a href="https://refine.dev/docs/">Documentation</a>
-</div>
-</div>
+## Description <!-- omit in toc -->
 
-</br>
-</br>
+Demo: [bee-farm-fe.onrender.com](https://bee-farm-fe.onrender.com)
 
-<div align="center"><strong>Build your <a href="https://reactjs.org/">React</a>-based CRUD applications, without constraints.</strong><br>An open source, headless web application framework developed with flexibility in mind.
+### Software Repositories
 
-<br />
-<br />
+Backend repo: [github.com/gnauqoa/bee-farm-be](https://github.com/gnauqoa/bee-farm-be)
 
-[![Discord](https://img.shields.io/discord/837692625737613362.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/refine)
-[![Twitter Follow](https://img.shields.io/twitter/follow/refine_dev?style=social)](https://twitter.com/refine_dev)
+Frontend repo: [github.com/gnauqoa/bee-farm-fe](https://github.com/gnauqoa/bee-farm-fe)
 
-<a href="https://www.producthunt.com/posts/refine-3?utm_source=badge-top-post-badge&utm_medium=badge&utm_souce=badge-refine&#0045;3" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/top-post-badge.svg?post_id=362220&theme=light&period=daily" alt="refine - 100&#0037;&#0032;open&#0032;source&#0032;React&#0032;framework&#0032;to&#0032;build&#0032;web&#0032;apps&#0032;3x&#0032;faster | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
+### Hardware Repositories
 
-</div>
+Gateway board repo: [github.com/gnauqoa/bee-farm-esp](https://github.com/gnauqoa/bee-farm-esp)
 
-## Try this example on your local
+Driver board repo: [github.com/gnauqoa/bee-farm-arduino](https://github.com/gnauqoa/bee-farm-arduino)
 
-```bash
-npm create refine-app@latest -- --example data-provider-nestjsx-crud
-```
+## Table of Contents <!-- omit in toc -->
 
-## Try this example on CodeSandbox
+- [Bee farm frontend](#bee-farm-frontend)
+    - [Software Repositories](#software-repositories)
+    - [Hardware Repositories](#hardware-repositories)
+  - [Features](#features)
+  - [Setup \& Installation](#setup--installation)
+  - [License](#license)
 
-<br/>
+## Features
 
-[![Open data-provider-nestjsx-crud example from refine](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/embed/github/refinedev/refine/tree/main/examples/data-provider-nestjsx-crud?view=preview&theme=dark&codemirror=1)
+- **Real-Time Monitoring**: Track temperature, humidity, and light levels within the beekeeping environment with MQTT for hardware device and websocket for web client.
+- **Actuator Control**: Adjust environmental conditions using actuators like incandescent lights, misting machines, and LED lights.
+- **Data Storage**: All sensor data is stored in a PostgreSQL database for historical analysis and reporting.
+- **User Interface**: An easy-to-use web interface to monitor and control the farm remotely.
+
+## Setup & Installation
+
+1. Clone the backend repository:
+
+   ```bash
+   git clone https://github.com/gnauqoa/bee-farm-fe.git
+   cd bee-farm-fe
+   ```
+
+2. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+3. Configure environment variables for the backend (e.g., database credentials, sensor settings).
+4. ```bash
+   cp env-example .env
+   ```
+
+5. Run the backend:
+   ```bash
+   npm run dev
+   ```
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more information.
