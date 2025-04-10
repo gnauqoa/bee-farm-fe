@@ -32,7 +32,7 @@ export const DeviceShow = () => {
     if (!device) return;
     try {
       const response = await axiosInstance.get(
-        `/devices/${device.id}/password`
+        `/devices/${queryResult.data?.data.id}/password`
       );
       setDeviceToken(response.data.device_pass);
       message.success("Device token created!");
